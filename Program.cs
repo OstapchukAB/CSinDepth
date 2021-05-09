@@ -45,26 +45,28 @@ namespace CSinDepth
     { 
         public string Name { get; private set; }
         public decimal? Price { get; private set; }
-        public Product(string name, decimal? price=null)
+        public int? SupplierID { get; private set; }
+        public Product(string name, decimal? price=null, int? supplierID=null)
         {
             Name = name;
             Price = price;
+            SupplierID = supplierID;
         }
         Product() { }
         public static List<Product> GetSampleProducts()
         {
             return new List<Product>
             {
-                new Product{Name="West side",Price=999.99m},
-                new Product{Name="Assaian 2",Price=10.45m },
-                new Product{Name="Assaian  ",Price=1.45m },
-                new Product{Name="Zooming  ",Price=0.4m },
-                new Product{Name="Food     ",Price=9.99m },
-                new Product{Name="Qest     ",Price=9.99m},
-                new Product{Name="Sian     ",Price=1.75m },
-                new Product{Name="Foom     ",Price=1000.01m },
-                new Product{Name="Botting  ",Price=56.41m },
-                new Product{Name="Botting 2",Price=null }
+                new Product{Name="West side",Price=999.99m,SupplierID=1001},
+                new Product{Name="Assaian 2",Price=10.45m,SupplierID=1001 },
+                new Product{Name="Assaian  ",Price=1.45m,SupplierID=1001 },
+                new Product{Name="Zooming  ",Price=0.4m,SupplierID=null },
+                new Product{Name="Food     ",Price=9.99m,SupplierID=null },
+                new Product{Name="Qest     ",Price=9.99m,SupplierID=null},
+                new Product{Name="Sian     ",Price=1.75m ,SupplierID=2001},
+                new Product{Name="Foom     ",Price=1000.01m, SupplierID=2001 },
+                new Product{Name="Botting  ",Price=56.41m,SupplierID=1001 },
+                new Product{Name="Botting 2",Price=null,SupplierID=null }
 
             };
         
@@ -72,9 +74,37 @@ namespace CSinDepth
         public override string ToString()
         {
             
-            return string.Format("{0}     {1:N2}",
-                Name,
-                Price /*==null?"NULL":Price.ToString()*/);
+            return string.Format("{2:D4}    {0}     {1:N2}",
+                Name,Price, SupplierID==null ? 0000:SupplierID);
+        }
+
+
+    }
+
+    class Supplier
+    {
+        public string Name { get; private set; }
+        public int SupplierID { get; private set; }
+        public Supplier(string name, int supplierID)
+        {
+            Name = name;
+            SupplierID = supplierID;
+        }
+        Supplier() { }
+        public static List<Supplier> GetSampleSupplier()
+        {
+            return new List<Supplier>
+            {
+                new Supplier{Name="Apple",SupplierID=1001},
+                new Supplier{Name="Microsoft",SupplierID=2001 }
+
+            };
+
+        }
+        public override string ToString()
+        {
+
+            return string.Format("{0}     {1:N2}",Name, SupplierID );
         }
 
 
