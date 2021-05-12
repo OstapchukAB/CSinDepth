@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace CSinDepth
 {
@@ -10,9 +11,38 @@ namespace CSinDepth
     {
         static void Main(string[] args)
         {
-            Simple01(); 
-           
-            
+            //Simple01();
+            Simple02();
+
+
+
+
+        }
+
+        static void Simple02() {
+
+            XDocument doc = XDocument.Load("..\\..\\MyXMLFile01.xml");
+            var filtered = from p in doc.Descendants("Product")
+                           join s in doc.Descendants("Supplier")
+                              on (int)p.Attribute("SupplierID")
+                              equals (int)s.Attribute("SupplierID")
+                           where (decimal)p.Attribute("Price") > 10
+                           orderby (string)s.Attribute("Name"),
+                                   (string)p.Attribute("Name")
+                           select new
+                           {
+                               SupplierName = (string)s.Attribute("Name"),
+                               ProductName = (string)p.Attribute("Name"),
+                               Price = (string)p.Attribute("Price")
+                           };
+            foreach (var v in filtered)
+            {
+                Console.WriteLine("{0} / {1}  / {2}",
+                                  v.SupplierName, v.ProductName, v.Price);
+            }
+            Console.ReadLine();
+
+
         }
 
         static void Simple01() {
