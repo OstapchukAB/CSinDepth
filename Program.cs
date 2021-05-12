@@ -43,13 +43,13 @@ namespace CSinDepth
                          into PS
                          from res in PS.DefaultIfEmpty( )
                          select new {
-                             Sname= res?.Name ?? String.Empty,
+                             Sname= res?.Name ?? null,
                              Pname=p.Name,
                              Price = p?.Price ?? null,
                          };
 
 
-            foreach (var v in result)
+            foreach (var v in result.OrderBy(x=>x?.Price).ThenBy(x=>x?.Sname).ThenBy(x=>x.Pname))
                 Console.WriteLine("{0} - {1:N2} - {2}", v.Pname, v.Price, v.Sname);  
 
             Console.ReadLine();
@@ -77,7 +77,7 @@ namespace CSinDepth
                 new Product{Name="Assaian  ",Price=1.45m,SupplierID=1001 },
                 new Product{Name="Zooming  ",Price=0.4m },
                 new Product{Name="Food     ",Price=9.99m },
-                new Product{Name="Qest     ",Price=9.99m},
+                new Product{Name="Qest     ",Price=9.99m,SupplierID=1001},
                 new Product{Name="Soop     ",Price=1.75m ,SupplierID=2001},
                 new Product{Name="Foot     ",Price=1000.01m, SupplierID=2001 },
                 new Product{Name="Botting  ",Price=56.41m,SupplierID=1001 },
