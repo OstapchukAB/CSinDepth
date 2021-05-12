@@ -1,20 +1,51 @@
-﻿using System;
+﻿using Microsoft.Office.Interop.Excel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Xml.Linq;
 
 namespace CSinDepth
 {
     class Program
     {
+        public readonly static string exePath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + @".\";
+
         static void Main(string[] args)
         {
             //Simple01();
-            Simple02();
+            SimpleSavetoXLS();
 
 
+
+
+        }
+
+        static void SimpleSavetoXLS() {
+
+            var app = new Application { Visible = false };
+            try
+            {
+                Workbook workbook = app.Workbooks.Add();
+                Worksheet worksheet = app.ActiveSheet;
+                int row = 1;
+                foreach (var product in Product.GetSampleProducts()
+                                               .Where(p => p.Price != null))
+                {
+                    worksheet.Cells[row, 1].Value = product.Name;
+                    worksheet.Cells[row, 2].Value = product.Price;
+                    row++;
+                }
+                workbook.SaveAs(Filename: exePath + "demo.xls",
+                                FileFormat: XlFileFormat.xlWorkbookNormal);
+            }
+            catch (Exception ex) {
+                Console.WriteLine (ex.StackTrace );
+            }
+            finally
+            {
+                app.Application.Quit();
+            }
 
 
         }
