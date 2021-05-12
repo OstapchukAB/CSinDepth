@@ -38,8 +38,9 @@ namespace CSinDepth
 
 
             //Left outer JOIN 
-            var result = from p in Lp
-                         join s in Lsp on p.SupplierID equals s.SupplierID into PS
+            var result = from p in Lp.Where(x=>x.Price<=100 || x?.Price==null) 
+                         join s in Lsp on p.SupplierID equals s.SupplierID
+                         into PS
                          from res in PS.DefaultIfEmpty( )
                          select new {
                              Sname= res?.Name ?? String.Empty,
