@@ -10,50 +10,36 @@ namespace CSinDepth
     {
         static void Main(string[] args)
         {
+            Simple01(); 
+           
+            
+        }
+
+        static void Simple01() {
 
             List<Product> Lp = Product.GetSampleProducts();
-            List<Supplier> Lsp = Supplier.GetSampleSupplier();  
-            //Lp.Sort(delegate (Product x, Product y)
-            //{
-            //    //return y.Price.CompareTo(x.Price);
-            //    return x.Name.CompareTo(y.Name);
-            //});
-
-            // C#2.0
-            //Predicate<Product> test = delegate (Product p) { return p.Price > 10m; };
-            //List<Product> matches = Lp.FindAll(test); 
-            //Action<Product> print = Console.WriteLine;
-            //matches.ForEach(print); 
-
-
+            List<Supplier> Lsp = Supplier.GetSampleSupplier();
             Lp.Add(new Product("Noname"));
 
-            //C#3.0
-            //foreach (Product p in Lp.OrderBy(x => x.Price).ThenBy(x => x.Name)
-            //    .Where(x => x.Price < 100 || x.Price == null))
-            //{
-            //    //var price = p.Price.ToString();
-            //    Console.WriteLine(p.ToString());
-            //}
-
-
             //Left outer JOIN 
-            var result = from p in Lp.Where(x=>x.Price<=100 || x?.Price==null) 
+            var result = from p in Lp.Where(x => x.Price <= 100 || x?.Price == null)
                          join s in Lsp on p.SupplierID equals s.SupplierID
                          into PS
-                         from res in PS.DefaultIfEmpty( )
-                         select new {
-                             Sname= res?.Name ?? null,
-                             Pname=p.Name,
+                         from res in PS.DefaultIfEmpty()
+                         select new
+                         {
+                             Sname = res?.Name ?? null,
+                             Pname = p.Name,
                              Price = p?.Price ?? null,
                          };
 
 
-            foreach (var v in result.OrderBy(x=>x?.Price).ThenBy(x=>x?.Sname).ThenBy(x=>x.Pname))
-                Console.WriteLine("{0} - {1:N2} - {2}", v.Pname, v.Price, v.Sname);  
+            foreach (var v in result.OrderBy(x => x?.Price).ThenBy(x => x?.Sname).ThenBy(x => x.Pname))
+                Console.WriteLine("{0} - {1:N2} - {2}", v.Pname, v.Price, v.Sname);
 
             Console.ReadLine();
-            
+
+
         }
     }
     class Product 
@@ -86,12 +72,6 @@ namespace CSinDepth
             };
         
         }
-        //public override string ToString()
-        //{
-            
-        //    return string.Format("{2:D4}    {0}     {1:N2}",
-        //        Name,Price , SupplierID==null ? 0000:SupplierID);
-        //}
 
 
     }
@@ -121,11 +101,6 @@ namespace CSinDepth
             };
 
         }
-        //public override string ToString()
-        //{
-
-        //    return string.Format("{0}     {1:N2}",Name, SupplierID );
-        //}
 
 
     }
