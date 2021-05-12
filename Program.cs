@@ -29,11 +29,27 @@ namespace CSinDepth
                 Workbook workbook = app.Workbooks.Add();
                 Worksheet worksheet = app.ActiveSheet;
                 int row = 1;
-                foreach (var product in Product.GetSampleProducts()
-                                               .Where(p => p.Price != null))
+                List<Product> Lp = Product.GetSampleProducts();
+                List<Supplier> Lsp = Supplier.GetSampleSupplier();
+                Lp.Add(new Product("Noname"));
+
+                //Left outer JOIN 
+                var result = from p in Lp.Where(x => x.Price <= 100 || x?.Price == null)
+                             join s in Lsp on p.SupplierID equals s.SupplierID
+                             into PS
+                             from res in PS.DefaultIfEmpty()
+                             select new
+                             {
+                                 Sname = res?.Name ?? "",
+                                 Pname = p.Name,
+                                 Price = p?.Price ?? 999999.99m,
+                             };
+
+                foreach (var res in result)
                 {
-                    worksheet.Cells[row, 1].Value = product.Name;
-                    worksheet.Cells[row, 2].Value = product.Price;
+                    worksheet.Cells[row, 1].Value = res.Sname;
+                    worksheet.Cells[row, 2].Value = res.Pname;
+                    worksheet.Cells[row, 3].Value = res.Price;
                     row++;
                 }
                 workbook.SaveAs(Filename: exePath + "demo.xls",
