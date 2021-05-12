@@ -35,26 +35,21 @@ namespace CSinDepth
             //    //var price = p.Price.ToString();
             //    Console.WriteLine(p.ToString());
             //}
-            var v_product = from p in Lp
-                                 select new {Pname = p.Name, p.Price,p.SupplierID};
 
-            //Left outer JOIN System.NullReferenceException
 
-            var result = from p in v_product
+            //Left outer JOIN 
+            var result = from p in Lp
                          join s in Lsp on p.SupplierID equals s.SupplierID into PS
-                         from res in PS.DefaultIfEmpty()
+                         from res in PS.DefaultIfEmpty( )
                          select new {
-                             Sname= (res.Name ==null) ? default(string):res.Name,
-                             p.Pname,
-                             Price = (p.Price ==null) ? default(decimal) : p.Price
+                             Sname= res?.Name ?? String.Empty,
+                             Pname=p.Name,
+                             Price = p?.Price ?? null,
                          };
 
 
-
-            //Console.WriteLine();
             foreach (var v in result)
-                Console.WriteLine("{0}      {1}     {2}",
-            v.Sname ,v.Pname,v.Price);  
+                Console.WriteLine("{0} - {1:N2} - {2}", v.Pname, v.Price, v.Sname);  
 
             Console.ReadLine();
             
@@ -76,7 +71,7 @@ namespace CSinDepth
         {
             return new List<Product>
             {
-                new Product{Name="Smartph ",Price=999.99m,SupplierID=1001},
+                new Product{Name="Smartph  ",Price=999.99m,SupplierID=1001},
                 new Product{Name="Assaian 2",Price=10.45m,SupplierID=1001 },
                 new Product{Name="Assaian  ",Price=1.45m,SupplierID=1001 },
                 new Product{Name="Zooming  ",Price=0.4m },
@@ -108,12 +103,11 @@ namespace CSinDepth
         readonly int? supplierID;
         public int? SupplierID => supplierID;
 
-        public Supplier(string name =null, int? supplierID =null)
+        Supplier(string name =null, int? supplierID =null)
         {
             this.name = name;
             this.supplierID = supplierID;
         }
-
 
 
         public static List<Supplier> GetSampleSupplier()
